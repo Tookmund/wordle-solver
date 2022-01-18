@@ -16,6 +16,7 @@ parser.add_argument("-x", "--exclude", action="append")
 parser.add_argument("-c", "--contains", action="append")
 
 parser.add_argument("-l", "--locate", nargs=2, action="append")
+parser.add_argument("-n", "--not-located", dest="notloc", nargs=2, action="append")
 
 args = parser.parse_args()
 
@@ -41,9 +42,21 @@ if args.locate is not None:
         except TypeError:
             print("Invalid --locate argument:", l)
         except IndexError:
-            print("Invalidate --locate location:", l)
+            print("Invalid --locate location:", l)
     relocate = re.compile("".join(loclist))
     guesses = list(filter(relocate.fullmatch, guesses))
+
+if args.notloc is not None:
+    loclist = ["."] * 5
+    for l in args.notloc:
+        try:
+            loc = int(l[0])
+            char = l[1]
+            loclist[loc-1] = "[^"+char+"]"
+        except TypeError:
+            print("Invalid --not-located argument:", l)
+        except IndexError:
+            print("Invalid --not-located location:", l)
 
 with open("guesses", "w") as g:
     g.write("\n".join(guesses))
