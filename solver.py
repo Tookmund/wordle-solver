@@ -57,6 +57,9 @@ if args.notloc is not None:
             print("Invalid --not-located argument:", l)
         except IndexError:
             print("Invalid --not-located location:", l)
+    renotlocate = re.compile("".join(loclist))
+    guesses = list(filter(renotlocate.fullmatch, guesses))
+
 
 with open("guesses", "w") as g:
     g.write("\n".join(guesses))
