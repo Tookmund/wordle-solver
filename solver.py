@@ -24,7 +24,11 @@ if args.exclude is not None:
     guesses = list(filter(reexclude.fullmatch, guesses))
 
 if args.contains is not None:
-    recontains = re.compile("["+"".join(args.contains)+"]+")
+    cl = "".join(args.contains)
+    recstr = ""
+    for c in cl:
+        recstr += "(?=.*"+c+")"
+    recontains = re.compile(recstr)
     guesses = list(filter(recontains.match, guesses))
 
 if args.locate is not None:
