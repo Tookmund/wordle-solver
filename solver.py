@@ -18,6 +18,8 @@ parser.add_argument("-c", "--contains", action="append")
 parser.add_argument("-l", "--locate", nargs=2, action="append")
 parser.add_argument("-n", "--not-located", dest="notloc", nargs=2, action="append")
 
+parser.add_argument("-r", "--regex")
+
 args = parser.parse_args()
 
 if args.exclude is not None:
@@ -60,6 +62,9 @@ if args.notloc is not None:
     renotlocate = re.compile("".join(loclist))
     guesses = list(filter(renotlocate.fullmatch, guesses))
 
+if args.regex is not None:
+    reregex = re.compile(args.regex)
+    guesses = list(filter(reregex.fullmatch, guesses))
 
 with open("guesses", "w") as g:
     g.write("\n".join(guesses))
