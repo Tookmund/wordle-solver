@@ -69,5 +69,5 @@ if args.regex is not None:
 with open("guesses", "w") as g:
     g.write("\n".join(guesses))
 
-if len(guesses) < 20:
+if len(guesses) <= 50:
     print("\n".join(guesses))
