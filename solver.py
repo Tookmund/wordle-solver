@@ -70,43 +70,24 @@ with open("guesses", "w") as g:
     g.write("\n".join(guesses))
     g.write("\n")
 
-# Dictionary Frequency Table from Wikipedia
-# https://en.wikipedia.org/wiki/Letter_frequency
-freq = {
-        "a": 	7.8,
-        "b":    2,
-        "c":    4,
-        "d": 	3.8,
-        "e": 	11,
-        "f": 	1.4,
-        "g": 	3,
-        "h":    2.3,
-        "i":    8.2,
-        "j":    0.21,
-        "k":    2.5,
-        "l":    5.3,
-        "m":    2.7,
-        "n":    7.2,
-        "o":    6.1,
-        "p": 	2.8,
-        "q":    0.24,
-        "r":    7.3,
-        "s":    8.7,
-        "t":    6.7,
-        "u": 	3.3,
-        "v":    1,
-        "w":    0.91,
-        "x":    0.27,
-        "y":    1.6,
-        "z": 	0.44,
-}
+freq = []
+for i in range(len(guesses[0])):
+    d = {}
+    for w in guesses:
+        l = w[i]
+        if l in d:
+            d[l] += 1
+        else:
+            d[l] = 1
+    freq.append(d)
 
 def wordfreq(word):
-    score = 1
+    score = 0
     existing = []
-    for l in word:
+    for i in range(len(word)):
+        l = word[i]
         if l not in existing:
-            score *= freq[l]
+            score += freq[i][l]
             existing.append(l)
     return score
 
@@ -116,4 +97,4 @@ for g in guesses:
     if score > guess[1]:
         guess = (g, score)
 
-print("GUESS: ", guess[0])
+print("GUESS:", guess[0])
