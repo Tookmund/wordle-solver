@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import re
 import argparse
+import sys
 
 try:
     guesses = open("guesses")
@@ -69,6 +70,13 @@ with open("guesses", "w") as g:
     g.write("\n")
 
 freq = []
+if len(guesses) == 0:
+    print("NO GUESSES???")
+    sys.exit(1)
+elif len(guesses) == 1:
+    print("CERTAIN:", guesses[0])
+    sys.exit(0)
+
 for i in range(len(guesses[0])):
     d = {}
     for w in guesses:
