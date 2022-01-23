@@ -26,41 +26,39 @@ if args.exclude is not None:
     reexclude = re.compile("[^"+"".join(args.exclude)+"]+")
     guesses = list(filter(reexclude.fullmatch, guesses))
 
-if args.contains is not None:
-    cl = "".join(args.contains)
+def contains(cl, guesses):
     recstr = ""
     for c in cl:
         recstr += "(?=.*"+c+")"
     recontains = re.compile(recstr)
-    guesses = list(filter(recontains.match, guesses))
+    return list(filter(recontains.match, guesses))
 
-if args.locate is not None:
+if args.contains is not None:
+    guesses = contains("".join(args.contains), guesses)
+
+def locate(larg, guesses):
     loclist = ["."] * 5
-    for l in args.locate:
+    for l in larg:
         try:
             loc = int(l[0])
             char = l[1]
             loclist[loc-1] = char
         except TypeError:
-            print("Invalid --locate argument:", l)
+            print("Invalid locate argument:", l)
         except IndexError:
-            print("Invalid --locate location:", l)
+            print("Invalid locate location:", l)
     relocate = re.compile("".join(loclist))
-    guesses = list(filter(relocate.fullmatch, guesses))
+    return list(filter(relocate.fullmatch, guesses))
+
+if args.locate is not None:
+    guesses = locate(args.locate, guesses)
 
 if args.notloc is not None:
-    loclist = ["."] * 5
+    guesses = locate(map(lambda t: (t[0], "[^"+t[1]+"]"), args.notloc), guesses)
+    cl = ""
     for l in args.notloc:
-        try:
-            loc = int(l[0])
-            char = l[1]
-            loclist[loc-1] = "[^"+char+"]"
-        except TypeError:
-            print("Invalid --not-located argument:", l)
-        except IndexError:
-            print("Invalid --not-located location:", l)
-    renotlocate = re.compile("".join(loclist))
-    guesses = list(filter(renotlocate.fullmatch, guesses))
+        cl += l[1]
+    guesses = contains(cl, guesses)
 
 if args.regex is not None:
     reregex = re.compile(args.regex)
